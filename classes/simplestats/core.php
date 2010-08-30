@@ -127,7 +127,7 @@ class Simplestats_Core {
 		}
 		else
 		{
-			//return $this->historical_stats($item_id, $name, $date);
+			// Return historical statistics if valid date is set
 			return Model::factory('Stat')->historical_stats($this->config['main_table'], $this->config['history_table'], $item_id, $name, $date);
 		}
 	}

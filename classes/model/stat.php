@@ -81,7 +81,7 @@ class Model_Stat extends Model {
 			// Return FALSE if ending date is eariler than start date
 			if ($start_date > $end_date)
 			{
-				return array('error' => 'Start date must be eariler than end date');
+				return FALSE;
 			}
 
 			// Get the timestamps for each day between start and end dates
