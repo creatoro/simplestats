@@ -107,10 +107,10 @@ class Simplestats_Core {
 	 * 		Simplestats::factory()->get('1', 'view');
 	 *
 	 * 		// Get 'download' statistics for item with id '2' on 03-09-2010
-	 * 		Simplestats::factory()->get('1', 'view', 11280786400);
+	 * 		Simplestats::factory()->get('2', 'view', 11280786400);
 	 *
 	 *		// Get 'print' statistics for item with id '3' between 15-08-2010 and 03-09-2010
-	 * 		Simplestats::factory()->get('1', 'view', array(11281823200, 11280786400));
+	 * 		Simplestats::factory()->get('3', 'view', array(11281823200, 11280786400));
 	 *
 	 *
 	 * @param   string   id of the item
@@ -139,7 +139,7 @@ class Simplestats_Core {
 	 * 		// Update or create 'view' statistics for item with id '1', no type set (default 'unique' used)
 	 * 		Simplestats::factory()->update('1', 'view');
 	 *
-	 * 		// Update or create 'download' statistics for item with id '1', 'view' type used
+	 * 		// Update or create 'download' statistics for item with id '2', 'view' type used
 	 * 		Simplestats::factory()->update('2', 'download', 'view');
 	 *
 	 *

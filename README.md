@@ -45,7 +45,7 @@ stats. This can be configured as above.
 Example 1: update or create `view` statistics for item with id `1`, no type set (default `unique` used)
 	Simplestats::factory()->update('1', 'view');
 
-Example 2: update or create `download` statistics for item with id `1`, `view` type and `myconfig` config used
+Example 2: update or create `download` statistics for item with id `2`, `view` type and `myconfig` config used
 	Simplestats::factory('myconfig')->update('2', 'download', 'view');
 
 
@@ -58,7 +58,7 @@ Example 1: get `view` statistics for item with id `1`
 	Simplestats::factory()->get('1', 'view');
 
 Example 2: get `download` statistics for item with id `2` on `03-09-2010`
-	Simplestats::factory()->get('1', 'view', 11280786400);
+	Simplestats::factory()->get('2', 'view', 11280786400);
 
 Example 3: get `print` statistics for item with id `3` between `15-08-2010` and `03-09-2010`
-	Simplestats::factory()->get('1', 'view', array(11281823200, 11280786400));
+	Simplestats::factory()->get('3', 'view', array(11281823200, 11280786400));
