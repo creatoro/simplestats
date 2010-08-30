@@ -7,17 +7,17 @@ Can be used to track unique or per-view visitors and provides summarized or hist
 Configuration
 -------------
 
-Create a core.php file in your 'config' folder and set the configuration options.
+Create a simplestats.php file in your 'config' folder and set the configuration options.
 Example configuration:
 
-'myconfig' => array( // 'myconfig' is the name of the config
-		'unique' => 1800, // 1800 seconds is the cookie expiration time for a unique user
-		'view' => 0, // 0 seconds is the expiration time for a per-view user
-		'main_table' => 'stats', // the main table for stats
-		'history_table' => 'stats_history', // the table for storing historical stats
-)
+	'myconfig' => array( // 'myconfig' is the name of the config
+			'unique' => 1800, // 1800 seconds is the cookie expiration time for a unique user
+			'view' => 0, // 0 seconds is the expiration time for a per-view user
+			'main_table' => 'stats', // the main table for stats
+			'history_table' => 'stats_history', // the table for storing historical stats
+	)
 
-The 'unique' and 'view' are just names for types and they could be anything, for example 'mytype'.
+The `unique` and `view` are just names for types and they could be anything, for example `mytype`.
 These are used to set the expiration time in seconds for the cookie.
 
 By setting up multiple configurations you can save different stats to different tables which could be
@@ -42,11 +42,11 @@ that represent the number of views for a certain item.
 stats. This can be configured as above.
 
 
-Example 1: update or create 'view' statistics for item with id '1', no type set (default 'unique' used)
-Simplestats::factory()->update('1', 'view');
+Example 1: update or create `view` statistics for item with id `1`, no type set (default `unique` used)
+	Simplestats::factory()->update('1', 'view');
 
-Example 2: update or create 'download' statistics for item with id '1', 'view' type and 'myconfig' config used
-Simplestats::factory('myconfig')->update('2', 'download', 'view');
+Example 2: update or create `download` statistics for item with id `1`, `view` type and `myconfig` config used
+	Simplestats::factory('myconfig')->update('2', 'download', 'view');
 
 
 
@@ -54,11 +54,11 @@ Simplestats::factory('myconfig')->update('2', 'download', 'view');
 Get stats
 ---------
 
-Example 1: get 'view' statistics for item with id '1'
-Simplestats::factory()->get('1', 'view');
+Example 1: get `view` statistics for item with id `1`
+	Simplestats::factory()->get('1', 'view');
 
-Example 2: get 'download' statistics for item with id '2' on 03-09-2010
-Simplestats::factory()->get('1', 'view', 11280786400);
+Example 2: get `download` statistics for item with id `2` on `03-09-2010`
+	Simplestats::factory()->get('1', 'view', 11280786400);
 
-Example 3: get 'print' statistics for item with id '3' between 15-08-2010 and 03-09-2010
-Simplestats::factory()->get('1', 'view', array(11281823200, 11280786400));
+Example 3: get `print` statistics for item with id `3` between `15-08-2010` and `03-09-2010`
+	Simplestats::factory()->get('1', 'view', array(11281823200, 11280786400));
