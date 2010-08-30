@@ -2,7 +2,7 @@ Simplestats
 ===========
 
 Very simple statistics for Kohana, made for the KohanaJobs project.
-Can be used to track unique or per-view visitors and provides summarized or historical statistics.
+It can be used to track unique or per-view visitors and provides summarized or historical statistics.
 
 Configuration
 -------------
@@ -17,8 +17,8 @@ Example configuration:
 			'history_table' => 'stats_history', // the table for storing historical stats
 	)
 
-The `unique` and `view` are just names for types and they could be anything, for example `mytype`.
-These are used to set the expiration time in seconds for the cookie.
+The `unique` and `view` settings are just names and they could be anything, for example `mytype`.
+These are used to set the expiration time in seconds for the cookie. Any name that is not called `main_table` or `history_table` can be used for types. 
 
 By setting up multiple configurations you can save different stats to different tables which could be
 very important in certain cases.
@@ -29,8 +29,7 @@ Create and update stats
 
 When creating statistics there are 4 things you have to think about:
 
-1. You can set which configuration to use when calling the factory() method. This is optional, if not set
-the config with 'default' name is used.
+1. You can set what configuration to use when calling the `factory()` method (using an array). This is optional, if not set the config with `default` name is used (see configuration file).
 
 2. A unique identifier for the item you are creating the stats for. This could be anything from an
 integer to a string (depends on you table).
@@ -45,8 +44,8 @@ stats. This can be configured as above.
 Example 1: update or create `view` statistics for item with id `1`, no type set (default `unique` used)
 	Simplestats::factory()->update('1', 'view');
 
-Example 2: update or create `download` statistics for item with id `2`, `view` type and `myconfig` config used
-	Simplestats::factory('myconfig')->update('2', 'download', 'view');
+Example 2: update or create `download` statistics for item with id `2`, `view` type used
+	Simplestats::factory()->update('2', 'download', 'view');
 
 
 
