@@ -2,7 +2,7 @@ Simplestats
 ===========
 
 Very simple statistics for Kohana, made for the KohanaJobs project.
-It can be used to track unique or per-view visitors and provides summarized or historical statistics.
+It can be used to track unique or per-view visitors and provides summarized and historical statistics.
 
 Configuration
 -------------
@@ -16,11 +16,13 @@ Example configuration (default settings):
 			'unique' => 1800, // 1800 seconds is the cookie expiration time for a unique user
 			'view' => 0, // 0 seconds is the expiration time for a per-view user
 			'main_table' => 'stats', // the main table for stats
-			'history_table' => 'stats_history', // the table for storing historical stats
+			'history_table' => 'stats_history', // the table for storing historical stats, set it to FALSE if not needed
 	)
 
 The `unique` and `view` settings are just names and they could be anything, for example `mytype`.
 These are used to set the expiration time in seconds for the cookie. Any name that is not `main_table` or `history_table` can be used for types.
+
+If `history_table` is set to `FALSE` no historical stat are going to be saved, therefore you don't need a history table.
 
 By setting up multiple configurations you can save different stats to different tables which could be
 very important in certain cases.
@@ -67,5 +69,4 @@ Example 3: get `print` statistics for item with id `3` between `15-08-2010` and 
 Todo
 ----
 
-1. Modify the module to make the historical stats an optional feature which can be set in the config.
-2. Easier way to choose which config to use when calling the `factory()` method.
+1. Easier way to choose which config to use when calling the `factory()` method.
