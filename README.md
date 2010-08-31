@@ -68,4 +68,4 @@ Todo
 ----
 
 1. Modify the module to make the historical stats an optional feature which can be set in the config.
-2. Easier way to choose which config to set when calling the `factory()` method.
+2. Easier way to choose which config to use when calling the `factory()` method.

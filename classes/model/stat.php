@@ -25,18 +25,11 @@ class Model_Stat extends Model {
 			{
 				$stats = $stats->current();
 
-				// Check for last update
-				if ( ! $stats->updated)
-				{
-					$last_updated = $stats->created;
-				}
-				else
-				{
-					$last_updated = $stats->updated;
-				}
+				// Set last update
+				$last_update = max($stats->created, $stats->updated);
 
 				// If the last update for that item happened before today it means there were no visits this day
-				if ($last_updated < strtotime('midnight'))
+				if ($last_update < strtotime('midnight'))
 				{
 					$today = 0;
 				}
@@ -78,7 +71,8 @@ class Model_Stat extends Model {
 			$start_date = strtotime(date('Y-m-d', $date[0]));
 			$end_date = strtotime(date('Y-m-d', $date[1]));
 
-			// Return FALSE if ending date is eariler than start date
+			// Return FALSE if ending date is earlier than start date
+			// @todo: return something meaningful
 			if ($start_date > $end_date)
 			{
 				return FALSE;
@@ -120,18 +114,11 @@ class Model_Stat extends Model {
 		{
 			$stats = $stats->current();
 
-			// Check for last update
-			if ( ! $stats->updated)
-			{
-				$last_updated = $stats->created;
-			}
-			else
-			{
-				$last_updated = $stats->updated;
-			}
+			// Set last update
+			$last_update = max($stats->created, $stats->updated);
 
 			// If the last update for that item happened before today it means there were no visits this day
-			if ($last_updated < strtotime('midnight'))
+			if ($last_update < strtotime('midnight'))
 			{
 				$today = 0;
 			}
@@ -194,21 +181,14 @@ class Model_Stat extends Model {
 			// Load the record
 			$stats = $stats->current();
 
-			// Check for last update
-			if ( ! $stats->updated)
-			{
-				$last_updated = $stats->created;
-			}
-			else
-			{
-				$last_updated = $stats->updated;
-			}
-
 			// Set update
 			$update = DB::update($main_table);
 
-			// If the last update for the item happened before today we have to update the xhistory
-			if ($last_updated < strtotime('midnight'))
+			// Set last update
+			$last_update = max($stats->created, $stats->updated);
+
+			// If the last update for the item happened before today we have to update the history
+			if ($last_update < strtotime('midnight'))
 			{
 				// Reset daily counter to 1, update sum counter
 				$update->set(array('counter_daily' => 1));
@@ -221,7 +201,7 @@ class Model_Stat extends Model {
 						'id' => NULL,
 						'stat_id' => $stats->id,
 						'counter' => $stats->counter_daily,
-						'date' => strtotime(date('Y-m-d', $last_updated)),
+						'date' => strtotime(date('Y-m-d', $last_update)),
 					))
 					->execute();
 
