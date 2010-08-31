@@ -50,9 +50,6 @@ class Simplestats_Core {
 
 		// Pagination setup
 		$this->setup($config);
-
-		print_r($this->config);
-		exit;
 	}
 
 	/**
