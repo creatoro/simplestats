@@ -7,8 +7,10 @@ It can be used to track unique or per-view visitors and provides summarized or h
 Configuration
 -------------
 
-Create a simplestats.php file in your 'config' folder and set the configuration options.
-Example configuration:
+Your first step is to create the tables needed for storing the stats by using the `mysql.sql` file.
+
+Create a `simplestats.php` file in your `config` folder and set the configuration options.
+Example configuration (default settings):
 
 	'default' => array( // 'default' is the name of the config
 			'unique' => 1800, // 1800 seconds is the cookie expiration time for a unique user
@@ -27,18 +29,15 @@ very important in certain cases.
 Create and update stats
 -----------------------
 
-When creating statistics there are 4 things you have to think about:
+When creating statistics there are 4 things you have to consider:
 
 1. You can set what configuration to use when calling the `factory()` method (using an array). This is optional, if not set the config with `default` name is used (see configuration file).
 
-2. A unique identifier for the item you are creating the stats for. This could be anything from an
-integer to a string (depends on you table).
+2. A unique identifier for the item you are creating the stats for. This could be anything from an integer to a string (depends on you table).
 
-3. The name of the statistics. Try to be descriptive, for example use `view` for stats
-that represent the number of views for a certain item.
+3. The name of the statistics. Try to be descriptive, for example use `view` for stats that represent the number of views for a certain item.
 
-4. The type of the stats. An optional setting for defining if you want to have unique or per-view
-stats. This can be configured as above.
+4. Choose if you want to track unique visitors or per-view visitors by defining the type of the stats (the types are set in the config as shown above). This is an optional setting, the default type is unique visitor tracking.
 
 
 Example 1: update or create `view` statistics for item with id `1`, no type set (default `unique` used)
@@ -61,3 +60,12 @@ Example 2: get `download` statistics for item with id `2` on `03-09-2010`
 
 Example 3: get `print` statistics for item with id `3` between `15-08-2010` and `03-09-2010`
 	Simplestats::factory()->get('3', 'view', array(11281823200, 11280786400));
+
+
+
+
+Todo
+----
+
+1. Modify the module to make the historical stats an optional feature which can be set in the config.
+2. Easier way to choose which config to set when calling the `factory()` method.
