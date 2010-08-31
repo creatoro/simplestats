@@ -33,9 +33,9 @@ Create and update stats
 
 When creating statistics there are 4 things you have to consider:
 
-1. You can set what configuration to use when calling the `factory()` method using the name of the configuration (like in the first example) or an array. This is optional, if not set the config with `default` name is used (see configuration file).
+1. You can set which configuration to use when calling the `factory()` method using the name of the configuration (like in the first example) or an array. This is optional, if not set the config with `default` name is used (see configuration file).
 
-2. A unique identifier for the item you are creating the stats for. This could be anything from an integer to a string (depends on you table).
+2. A unique identifier for the item you are creating the stats for. This could be anything from an integer to a string (depends on your table).
 
 3. The name of the statistics. Try to be descriptive, for example use `view` for stats that represent the number of views for a certain item.
 
