@@ -3,7 +3,7 @@
 /**
  * Simplestats: a simple statistics system for Kohana.
  *
- * (The part that is responsible for the configuration is from the Pagination module of Kohana)
+ * (The part that is responsible for the configuration is mostly from the Pagination module of Kohana)
  *
  * @author     creatoro
  * @copyright  (c) 2010 creatoro
@@ -24,8 +24,16 @@ class Simplestats_Core {
 	 * @param   array  configuration
 	 * @return  Simplestats
 	 */
-	public static function factory(array $config = array())
+	public static function factory($config = array())
 	{
+		// If configuration is not an array try to load the configuration by name
+		if ( ! is_array($config))
+		{
+			// If the configuration is not found set the config to an empty array
+			if ( ! $config = Kohana::config('simplestats.' . $config))
+				$config = array();
+		}
+
 		return new Simplestats($config);
 	}
 
@@ -42,6 +50,9 @@ class Simplestats_Core {
 
 		// Pagination setup
 		$this->setup($config);
+
+		print_r($this->config);
+		exit;
 	}
 
 	/**
