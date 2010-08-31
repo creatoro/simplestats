@@ -24,12 +24,9 @@ class Model_Stat extends Model {
 			if ($stats->count() > 0)
 			{
 				$stats = $stats->current();
-
-				// Set last update
-				$last_update = max($stats->created, $stats->updated);
-
+				
 				// If the last update for that item happened before today it means there were no visits this day
-				if ($last_update < strtotime('midnight'))
+				if (max($stats->created, $stats->updated) < strtotime('midnight'))
 				{
 					$today = 0;
 				}
@@ -114,11 +111,8 @@ class Model_Stat extends Model {
 		{
 			$stats = $stats->current();
 
-			// Set last update
-			$last_update = max($stats->created, $stats->updated);
-
 			// If the last update for that item happened before today it means there were no visits this day
-			if ($last_update < strtotime('midnight'))
+			if (max($stats->created, $stats->updated) < strtotime('midnight'))
 			{
 				$today = 0;
 			}
@@ -184,11 +178,8 @@ class Model_Stat extends Model {
 			// Set update
 			$update = DB::update($main_table);
 
-			// Set last update
-			$last_update = max($stats->created, $stats->updated);
-
-			// If the last update for the item happened before today we have to update the history
-			if ($last_update < strtotime('midnight'))
+			// If historical stats are needed and the last update for the item happened before today we have to update the history
+			if ($history_table !== FALSE AND $last_update = max($stats->created, $stats->updated) < strtotime('midnight'))
 			{
 				// Reset daily counter to 1, update sum counter
 				$update->set(array('counter_daily' => 1));
@@ -210,7 +201,7 @@ class Model_Stat extends Model {
 			}
 			else
 			{
-				// If the last update happened today update statistics
+				// If the last update happened today or no historical stats are needed update statistics
 				$update->set(array('counter_daily' => $stats->counter_daily + 1));
 				$update->set(array('counter_sum' => $stats->counter_sum + 1));
 				$update->set(array('updated' => time()));
