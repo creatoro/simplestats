@@ -178,8 +178,11 @@ class Model_Stat extends Model {
 			// Set update
 			$update = DB::update($main_table);
 
+			// Set last update
+			$last_update = max($stats->created, $stats->updated);
+
 			// If historical stats are needed and the last update for the item happened before today we have to update the history
-			if ($history_table !== FALSE AND $last_update = max($stats->created, $stats->updated) < strtotime('midnight'))
+			if ($history_table !== FALSE AND $last_update < strtotime('midnight'))
 			{
 				// Reset daily counter to 1, update sum counter
 				$update->set(array('counter_daily' => 1));
