@@ -128,8 +128,8 @@ class Simplestats_Core {
 	 */
 	public function get($item_id, $name, $date = NULL)
 	{
-		// If no date set or historical stats are turned off or date is today's date get the current statistics
-		if ($date === NULL OR $this->config['history_table'] === FALSE OR ( ! is_array($date) AND strtotime(date('Y-m-d', $date)) == strtotime('midnight')))
+		// If no date set or historical stats are turned off or date is today's date (or later) get the current statistics
+		if ($date === NULL OR $this->config['history_table'] === FALSE OR ( ! is_array($date) AND strtotime(date('Y-m-d', $date)) >= strtotime('midnight')))
 		{
 			return Model::factory('Stat')->current_stats($this->config['main_table'], $item_id, $name);
 		}

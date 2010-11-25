@@ -129,9 +129,11 @@ class Model_Stat extends Model {
 				$date => $stats->counter,
 			);
 		}
-		elseif ($stats->count() > 1 OR is_array($date))
+		elseif ($stats->count() >= 1 AND is_array($date))
 		{
 			// If multiple results are returned create a history array with all the available statistics
+			$history = array();
+
 			foreach ($stats as $stat)
 			{
 				$history[$stat->date] = $stat->counter;
@@ -161,7 +163,7 @@ class Model_Stat extends Model {
 	public function update($main_table, $history_table, $item_id, $name)
 	{
 		// Find statistics for the item
-		$stats = DB::select('id','counter_daily', 'counter_sum', 'updated', 'created')
+		$stats = DB::select('id', 'counter_daily', 'counter_sum', 'updated', 'created')
 			->from($main_table)
 			->where('item_id', '=', $item_id)
 			->where('name', '=', $name)
@@ -214,8 +216,7 @@ class Model_Stat extends Model {
 			}
 
 			// Update statistics
-			$update->where('item_id', '=', $item_id)
-				->where('name', '=', $name)
+			$update->where('id', '=', $stats->id)
 				->execute();
 
 			// Return new stats
