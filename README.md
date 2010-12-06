@@ -58,7 +58,7 @@ Example 1: get `view` statistics for item with id `1`
 	Simplestats::factory()->get('1', 'view');
 
 Example 2: get `download` statistics for item with id `2` on `03-09-2010`
-	Simplestats::factory()->get('2', 'view', 11280786400);
+	Simplestats::factory()->get('2', 'download', 11280786400);
 
 Example 3: get `print` statistics for item with id `3` between `15-08-2010` and `03-09-2010`
-	Simplestats::factory()->get('3', 'view', array(11281823200, 11280786400));
+	Simplestats::factory()->get('3', 'print', array(11281823200, 11280786400));
