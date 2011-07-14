@@ -1,19 +1,19 @@
 CREATE TABLE IF NOT EXISTS `stats` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `counter_daily` int(11) unsigned NOT NULL DEFAULT '0',
-  `counter_sum` int(11) unsigned NOT NULL DEFAULT '0',
-  `created` int(10) unsigned DEFAULT NULL,
-  `updated` int(10) unsigned DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `counter_daily` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `counter_sum` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `created` int(10) UNSIGNED DEFAULT NULL,
+  `updated` int(10) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `stats_history` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `stat_id` int(11) unsigned NOT NULL,
-  `counter` int(11) unsigned NOT NULL,
-  `date` int(10) unsigned DEFAULT NULL,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `stat_id` int(11) UNSIGNED NOT NULL,
+  `counter` int(11) UNSIGNED NOT NULL,
+  `date` int(10) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 

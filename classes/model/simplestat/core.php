@@ -1,17 +1,18 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-class Model_Stat extends Model {
+class Model_Simplestat_Core extends Model {
 
-	/**
+	/*
 	 * Gets current statistics if no date is set.
 	 *
-	 * @param   string   main table name
-	 * @param   string   id of the item
-	 * @param   string   name of statistics
-	 * @return  mixed  statistics for the item or FALSE if nothing found
+	 * @param   string  $main_table
+	 * @param   string  $item_id
+	 * @param   string  $name
+	 * @return  mixed   statistics for the item or FALSE if nothing found
 	 */
 	public function current_stats($main_table, $item_id, $name)
 	{
+		// Search for statistics
 		$stats = DB::select()
 				->from($main_table)
 				->where('item_id', '=', $item_id)
@@ -20,71 +21,74 @@ class Model_Stat extends Model {
 				->as_object()
 				->execute();
 
-			// If statistics exist for that item get details
-			if ($stats->count() > 0)
-			{
-				$stats = $stats->current();
-				
-				// If the last update for that item happened before today it means there were no visits this day
-				if (max($stats->created, $stats->updated) < strtotime('midnight'))
-				{
-					$today = 0;
-				}
-				else
-				{
-					// If the last update happened today get the value of the daily counter
-					$today = $stats->counter_daily;
-				}
+		if ($stats->count() === 0)
+		{
+			// No statistics exist for the item
+			return FALSE;
+		}
 
-				// Return the results for today and the sum
-				return array(
-					'today' => $today,
-					'sum' => $stats->counter_sum,
-				);
-			}
-			else
-			{
-				// If no statistics exist for the item return FALSE
-				return FALSE;
-			}
+		// Get current record
+		$stats = $stats->current();
+
+		if (max($stats->created, $stats->updated) < strtotime('midnight'))
+		{
+			// If the last update for that item happened before today it means there were no visits this day
+			$today = 0;
+		}
+		else
+		{
+			// If the last update happened today get the value of the daily counter
+			$today = $stats->counter_daily;
+		}
+
+		// Return the results for today and the sum
+		return array(
+			'today' => $today,
+			'sum'   => $stats->counter_sum,
+		);
 	}
 
-	/**
+	/*
 	 * Gets historical statistics, falls back to current statistics if no history exists.
 	 *
-	 * @param   string   main table name
-	 * @param   string   history table name
-	 * @param   string   id of the item
-	 * @param   string   name of statistics
-	 * @param   mixed   a certain date or start and end dates in array in UNIX timestamps
-	 * @return  mixed  statistics for the item or FALSE if nothing found
+	 * Date format should be in UNIX timestamp and it can be set as an integer for
+	 * a certain date or an array of integers for a period. For example:
+	 *
+	 *     array(11281823200, 11280786400)
+	 *
+	 * @param   string  $main_table
+	 * @param   string  $history_table
+	 * @param   string  $item_id
+	 * @param   string  $name
+	 * @param   mixed   $date
+	 * @return  mixed   statistics for the item or FALSE if nothing found
 	 */
 	public function historical_stats($main_table, $history_table, $item_id, $name, $date)
 	{
-		// If date is set perform a historical query
 		if (is_array($date))
 		{
-			// Set the start and the end dates
+			// Set the start and the end dates for historical query
 			$start_date = strtotime(date('Y-m-d', $date[0]));
-			$end_date = strtotime(date('Y-m-d', $date[1]));
+			$end_date   = strtotime(date('Y-m-d', $date[1]));
 
-			// Return FALSE if ending date is earlier than start date
-			// @todo: return something meaningful
 			if ($start_date > $end_date)
 			{
-				return FALSE;
+				// End date is earlier than start date
+				throw new Simplestats_Exception('End date [ :end ] is earlier than start date [ :start ].',
+					array(':end' => date('Y-m-d', $end_date), ':start' => date('Y-m-d', $start_date)));
 			}
 
-			// Get the timestamps for each day between start and end dates
+			// Set current date
 			$current_date = $start_date;
 
+			// Get the timestamps for each day between start and end dates
 			while($current_date < $end_date)
 			{
 				// Add this new day to the array
 				$days_between[$current_date] = 0;
 
 				// Add a day to the current date
-				$current_date = strtotime("+1 day", $current_date);
+				$current_date = strtotime('+1 day', $current_date);
 			}
 		}
 		else
@@ -106,14 +110,14 @@ class Model_Stat extends Model {
 			->as_object()
 			->execute();
 
-		// If one result is returned get the details
 		if ($stats->count() == 1 AND ! is_array($date))
 		{
+			// If one result is returned get the details
 			$stats = $stats->current();
 
-			// If the last update for that item happened before today it means there were no visits this day
 			if (max($stats->created, $stats->updated) < strtotime('midnight'))
 			{
+				// If the last update for that item happened before today it means there were no visits this day
 				$today = 0;
 			}
 			else
@@ -125,8 +129,8 @@ class Model_Stat extends Model {
 			// Return the results for today, the sum and for the chosen date
 			return array(
 				'today' => $today,
-				'sum' => $stats->counter_sum,
-				$date => $stats->counter,
+				'sum'   => $stats->counter_sum,
+				$date   => $stats->counter,
 			);
 		}
 		elseif ($stats->count() >= 1 AND is_array($date))
@@ -137,8 +141,8 @@ class Model_Stat extends Model {
 			foreach ($stats as $stat)
 			{
 				$history[$stat->date] = $stat->counter;
-				$history['today'] = $stat->counter_daily;
-				$history['sum'] = $stat->counter_sum;
+				$history['today']     = $stat->counter_daily;
+				$history['sum']       = $stat->counter_sum;
 			}
 
 			// Return the merged results
@@ -154,11 +158,11 @@ class Model_Stat extends Model {
 	/**
 	 * Updates or creates statistics for an item.
 	 *
-	 * @param   string   main table name
-	 * @param   string   history table name
-	 * @param   string   id of the item
-	 * @param   string   name of statistics
-	 * @return  mixed  updated daily and summarized statistics for the item
+	 * @param   string  $main_table
+	 * @param   string  $history_table
+	 * @param   string  $item_id
+	 * @param   string  $name
+	 * @return  mixed   updated daily and summarized statistics for the item
 	 */
 	public function update($main_table, $history_table, $item_id, $name)
 	{
@@ -171,10 +175,9 @@ class Model_Stat extends Model {
 			->as_object()
 			->execute();
 
-		// Check if statistics exist for the item
 		if ($stats->count() > 0)
 		{
-			// Load the record
+			// If statistics exist for the item load the record
 			$stats = $stats->current();
 
 			// Set update
@@ -194,10 +197,10 @@ class Model_Stat extends Model {
 				// Close statistics for the previous day
 				DB::insert($history_table)
 					->values(array(
-						'id' => NULL,
+						'id'      => NULL,
 						'stat_id' => $stats->id,
 						'counter' => $stats->counter_daily,
-						'date' => strtotime(date('Y-m-d', $last_update)),
+						'date'    => strtotime(date('Y-m-d', $last_update)),
 					))
 					->execute();
 
@@ -217,12 +220,12 @@ class Model_Stat extends Model {
 
 			// Update statistics
 			$update->where('id', '=', $stats->id)
-				->execute();
+				   ->execute();
 
 			// Return new stats
 			return array(
 				'today' => $today,
-				'sum' => $stats->counter_sum + 1,
+				'sum'   => $stats->counter_sum + 1,
 			);
 		}
 		else
@@ -230,21 +233,21 @@ class Model_Stat extends Model {
 			// If no statistics found create a new record
 			$stats = DB::insert($main_table)
 				->values(array(
-					'id' => NULL,
-					'item_id' => $item_id,
-					'name' => $name,
+					'id'            => NULL,
+					'item_id'       => $item_id,
+					'name'          => $name,
 				    'counter_daily' => 1,
-					'counter_sum' => 1,
-					'created' => time(),
-					'updated' => NULL,
+					'counter_sum'   => 1,
+					'created'       => time(),
+					'updated'       => NULL,
 				))
 				->execute();
 
 			// Return statistics
 			return array(
 				'today' => 1,
-				'sum' => 1,
+				'sum'   => 1,
 			);
 		}
 	}
-}
+} // End Model_Simplestat_Core

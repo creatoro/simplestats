@@ -4,9 +4,9 @@ return array(
 
 	// Application defaults
 	'default' => array(
-		'unique' => 1800,
-		'view' => 0,
-		'main_table' => 'stats',
+		'unique'        => 1800,
+		'view'          => 0,
+		'main_table'    => 'stats',
 		'history_table' => 'stats_history',
 	),
 	
