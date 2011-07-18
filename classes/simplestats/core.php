@@ -193,4 +193,4 @@ class Simplestats_Core {
 		return Model::factory('Simplestat')->update($this->config['main_table'], $this->config['history_table'], $item_id, $name);
 	}
 
-}
+} // End Simplestats_Core
