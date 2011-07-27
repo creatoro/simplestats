@@ -196,11 +196,17 @@ class Model_Simplestat_Core extends Model {
 
 				// Close statistics for the previous day
 				DB::insert($history_table)
+					->columns(array(
+						'id',
+						'stat_id',
+						'counter',
+						'date',
+					))
 					->values(array(
-						'id'      => NULL,
-						'stat_id' => $stats->id,
-						'counter' => $stats->counter_daily,
-						'date'    => strtotime(date('Y-m-d', $last_update)),
+						NULL,
+						$stats->id,
+						$stats->counter_daily,
+						strtotime(date('Y-m-d', $last_update)),
 					))
 					->execute();
 
@@ -232,14 +238,23 @@ class Model_Simplestat_Core extends Model {
 		{
 			// If no statistics found create a new record
 			$stats = DB::insert($main_table)
+				->columns(array(
+					'id',
+					'item_id',
+					'name',
+				    'counter_daily',
+					'counter_sum',
+					'created',
+					'updated',
+				))
 				->values(array(
-					'id'            => NULL,
-					'item_id'       => $item_id,
-					'name'          => $name,
-				    'counter_daily' => 1,
-					'counter_sum'   => 1,
-					'created'       => time(),
-					'updated'       => NULL,
+					NULL,
+					$item_id,
+					$name,
+				    1,
+					1,
+					time(),
+					NULL,
 				))
 				->execute();
 
