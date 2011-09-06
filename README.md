@@ -1,7 +1,7 @@
 # Simplestats
 
 Very simple statistics for Kohana.
-The module will not provide any presentation of the stats, it only gathrs raw data and saves it to database.
+The module will not provide any presentation of the stats, it only gathers raw data and saves it to database.
 
 It can be used to track unique or per-view visitors and provides summarized and historical statistics.
 
@@ -53,7 +53,7 @@ When creating statistics there are 4 things you have to consider:
 
 #### Example 1:
 
-Update or create **view** statistics for item with id **1**, no type set (default **unique** used), **myconfig** configuration is used.
+Update or create **view** statistics for item with id **1**, no type set (default **unique** will be used), using **myconfig** configuration.
 
 	Simplestats::factory('myconfig')->update('1', 'view');
 
@@ -71,10 +71,14 @@ Get **view** statistics for item with id **1**.
 
 	Simplestats::factory()->get('1', 'view');
 
-#### Example 2: get **download** statistics for item with id **2** on **03-09-2010**
+#### Example 2:
+
+Get **download** statistics for item with id **2** on **03-09-2010**.
 
 	Simplestats::factory()->get('2', 'download', 11280786400);
 
-#### Example 3: get **print** statistics for item with id **3** between **15-08-2010** and **03-09-2010**
+#### Example 3:
+
+Get **print** statistics for item with id **3** between **15-08-2010** and **03-09-2010**.
 
 	Simplestats::factory()->get('3', 'print', array(11281823200, 11280786400));
