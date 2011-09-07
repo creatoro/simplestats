@@ -32,7 +32,7 @@ class Simplestats_Core {
 		if ( ! is_array($config))
 		{
 			// Load the configuration by group
-			$config = Kohana::config('simplestats.'.$config);
+			$config = Kohana::$config->load('simplestats.'.$config);
 
 			if ($config === NULL)
 			{
@@ -69,7 +69,7 @@ class Simplestats_Core {
 	public function config_group($group = 'default')
 	{
 		// Load the Simplestats config file
-		$config_file = Kohana::config('simplestats');
+		$config_file = Kohana::$config->load('simplestats');
 
 		// Initialize the $config array
 		$config['group'] = (string) $group;
