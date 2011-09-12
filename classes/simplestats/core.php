@@ -11,7 +11,7 @@
  */
 class Simplestats_Core {
 
-	/*
+	/**
 	 * @var  array  default configuration.
 	 */
 	public $config = array(
@@ -26,6 +26,7 @@ class Simplestats_Core {
 	 *
 	 * @param   array  $config
 	 * @return  Simplestats
+	 * @uses    Kohana::config
 	 */
 	public static function factory($config = array())
 	{
@@ -65,6 +66,7 @@ class Simplestats_Core {
 	 *
 	 * @param   string  $group
 	 * @return  array   config settings
+	 * @uses    Kohana::config
 	 */
 	public function config_group($group = 'default')
 	{
@@ -134,6 +136,7 @@ class Simplestats_Core {
 	 * @param   string  $name
 	 * @param   mixed   $date
 	 * @return  mixed   statistics for the item or FALSE if nothing found
+	 * @uses    Model::factory
 	 */
 	public function get($item_id, $name, $date = NULL)
 	{
@@ -164,6 +167,10 @@ class Simplestats_Core {
 	 * @param   string  $name
 	 * @param   string  $type
 	 * @return  mixed   updated daily and summarized statistics for the item
+	 * @uses    Cookie::get
+	 * @uses    Cookie::delete
+	 * @uses    Cookie::set
+	 * @uses    Model::factory
 	 */
 	public function update($item_id, $name, $type = 'unique')
 	{

@@ -9,6 +9,7 @@ class Model_Simplestat_Core extends Model {
 	 * @param   string  $item_id
 	 * @param   string  $name
 	 * @return  mixed   statistics for the item or FALSE if nothing found
+	 * @uses    DB::select
 	 */
 	public function current_stats($main_table, $item_id, $name)
 	{
@@ -62,6 +63,8 @@ class Model_Simplestat_Core extends Model {
 	 * @param   string  $name
 	 * @param   mixed   $date
 	 * @return  mixed   statistics for the item or FALSE if nothing found
+	 * @uses    DB::select
+	 * @uses    Arr::merge
 	 */
 	public function historical_stats($main_table, $history_table, $item_id, $name, $date)
 	{
@@ -163,6 +166,9 @@ class Model_Simplestat_Core extends Model {
 	 * @param   string  $item_id
 	 * @param   string  $name
 	 * @return  mixed   updated daily and summarized statistics for the item
+	 * @uses    DB::select
+	 * @uses    DB::update
+	 * @uses    DB::insert
 	 */
 	public function update($main_table, $history_table, $item_id, $name)
 	{
