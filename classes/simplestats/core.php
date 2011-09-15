@@ -12,107 +12,39 @@
 class Simplestats_Core {
 
 	/**
-	 * @var  array  default configuration.
-	 */
-	public $config = array(
-		'unique'        => 1800,
-		'view'          => 0,
-		'main_table'    => 'stats',
-		'history_table' => 'stats_history',
-	);
-
-	/**
 	 * Creates a new Simplestats object.
 	 *
-	 * @param   array  $config
+	 * @param   mixed  $config
 	 * @return  Simplestats
-	 * @uses    Kohana::config
+	 * @uses    Kohana::$config
 	 */
-	public static function factory($config = array())
+	public static function factory($config = 'default')
 	{
-		if ( ! is_array($config))
+		if (is_string($config) AND ($config = Kohana::$config->load('simplestats.'.$config)) === NULL)
 		{
-			// Load the configuration by group
-			$config = Kohana::$config->load('simplestats.'.$config);
-
-			if ($config === NULL)
-			{
-				// If the configuration is not found set the config to an empty array
-				$config = array();
-			}
+			// No such configuration group exist
+			throw new Simplestats_Exception('Configuration group does not exist.');
 		}
 
 		return new Simplestats($config);
 	}
 
 	/**
-	 * Merges the default and the given configurations.
+	 * Sets the configuration and checks for required settings.
 	 *
 	 * @param   array  $config
 	 * @return  void
 	 */
 	public function __construct(array $config = array())
 	{
-		// Overwrite system defaults with application defaults
-		$this->config = $this->config_group() + $this->config;
-
-		// Simplestats setup
-		$this->setup($config);
-	}
-
-	/**
-	 * Retrieves a simplestats config group from the config file. One config group can
-	 * refer to another as its parent, which will be recursively loaded.
-	 *
-	 * @param   string  $group
-	 * @return  array   config settings
-	 * @uses    Kohana::config
-	 */
-	public function config_group($group = 'default')
-	{
-		// Load the Simplestats config file
-		$config_file = Kohana::$config->load('simplestats');
-
-		// Initialize the $config array
-		$config['group'] = (string) $group;
-
-		// Recursively load requested config groups
-		while (isset($config['group']) AND isset($config_file->$config['group']))
+		if ( ! isset($config['main_table']) OR empty($config['main_table']))
 		{
-			// Temporarily store config group name
-			$group = $config['group'];
-			unset($config['group']);
-
-			// Add config group values, not overwriting existing keys
-			$config += $config_file->$group;
+			// Main table has to be set
+			throw new Simplestats_Exception("The 'main_table' is not set in configuration.");
 		}
 
-		// Get rid of possible stray config group names
-		unset($config['group']);
-
-		// Return the merged config group settings
-		return $config;
-	}
-
-	/**
-	 * Loads configuration settings into the object.
-	 *
-	 * @param   array   $config
-	 * @return  Simplestats
-	 */
-	public function setup(array $config = array())
-	{
-		if (isset($config['group']))
-		{
-			// Recursively load requested config groups
-			$config += $this->config_group($config['group']);
-		}
-
-		// Overwrite the current config settings
-		$this->config = $config + $this->config;
-
-		// Chainable method
-		return $this;
+		// Set config
+		$this->config = $config;
 	}
 
 	/**
@@ -140,7 +72,7 @@ class Simplestats_Core {
 	 */
 	public function get($item_id, $name, $date = NULL)
 	{
-		if ($date === NULL OR $this->config['history_table'] === FALSE OR ( ! is_array($date) AND strtotime(date('Y-m-d', $date)) >= strtotime('midnight')))
+		if ($date === NULL OR Arr::get($this->config, 'history_table', FALSE) === FALSE OR ( ! is_array($date) AND strtotime(date('Y-m-d', $date)) >= strtotime('midnight')))
 		{
 			// If no date set or historical stats are turned off or date is today's date (or earlier) get the current statistics
 			return Model::factory('Simplestat')->current_stats($this->config['main_table'], $item_id, $name);
@@ -175,7 +107,7 @@ class Simplestats_Core {
 	public function update($item_id, $name, $type = 'unique')
 	{
 		// Check if the expiration time is set to higher than zero
-		if ($this->config[$type] > 0)
+		if (Arr::get($this->config, $type, 0) > 0)
 		{
 			// If expiration time is set check for cookie
 			if (Cookie::get($name.'_'.$item_id))
@@ -197,7 +129,7 @@ class Simplestats_Core {
 		}
 
 		// Update statistics
-		return Model::factory('Simplestat')->update($this->config['main_table'], $this->config['history_table'], $item_id, $name);
+		return Model::factory('Simplestat')->update($this->config['main_table'], Arr::get($this->config, 'history_table', FALSE), $item_id, $name);
 	}
 
 } // End Simplestats_Core

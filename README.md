@@ -31,7 +31,7 @@ Example configuration (default settings):
 The **unique** and **view** settings are just names and they could be anything, for example **mytype**.
 These are used to set the expiration time in seconds for the cookie. Any name that is not **main_table** or **history_table** can be used for types.
 
-If **history_table** is set to `FALSE` no historical stats are going to be saved, therefore you don't need a history table.
+If **history_table** is set to `FALSE` or missing, then no historical stats are going to be saved, therefore you don't need a history table.
 
 By setting up multiple configurations you can save different stats to different tables.
 
